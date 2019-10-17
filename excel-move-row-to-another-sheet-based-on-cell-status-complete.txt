@@ -1,0 +1,33 @@
+# This Script will help to move the row to another tab based upon a status complete
+Sub Cheezy()
+
+    Dim xRg As Range
+    Dim xCell As Range
+    Dim I As Long
+    Dim J As Long
+    Dim K As Long
+    I = Worksheets("Current Open Tasks").UsedRange.Rows.Count
+    J = Worksheets("Closed or Archived tasks").UsedRange.Rows.Count
+    If J = 1 Then
+       If Application.WorksheetFunction.CountA(Worksheets("Closed or Archived tasks").UsedRange) = 0 Then J = 0
+    End If
+    Set xRg = Worksheets("Current Open Tasks").Range("L1:L" & I)
+    On Error Resume Next
+    Application.ScreenUpdating = False
+    For K = 1 To xRg.Count
+        If CStr(xRg(K).Value) = "complete" Then
+            xRg(K).EntireRow.Copy Destination:=Worksheets("Closed or Archived tasks").Range("A" & J + 1)
+            xRg(K).EntireRow.Delete
+            If CStr(xRg(K).Value) = "complete" Then
+                K = K - 1
+            End If
+            J = J + 1
+        End If
+    Next
+    Application.ScreenUpdating = True
+End Sub
+
+
+
+# ALT+Fn+ F11 for VBs module to run the Completed Details to Another tab.
+# https://www.extendoffice.com/documents/excel/3723-excel-move-row-to-another-sheet-based-on-cell-value.html
